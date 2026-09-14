@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c29ca82a20f9f5a4fb48dcd5658af372, type: 3}
+  m_Name: Lude
+  m_EditorClassIdentifier: 
+  startNodeId: start
+  nodes:
+  - id: start
+    content: "\u522B\u53BB\u5B66\u6821\uFF0C\u4F60\u88AB\u8001\u5E08\u9A97\u4E86"
+    nextNodeId: 2
+    choices: []
+  - id: 2
+    content: "\u6211\u662F\u672A\u6765\u7684\u4F60"
+    nextNodeId: 3
+    choices: []
+  - id: 3
+    content: "\u73B0\u5728\u7684\u4F60\u8981\u505A\u7684\u4E8B\u6709\u4E09\u4EF6"
+    nextNodeId: 4
+    choices: []
+  - id: 4
+    content: "1.\u548C\u7236\u6BCD\u5546\u91CF"
+    nextNodeId: 5
+    choices: []
+  - id: 5
+    content: "2.\u5199\u4FE1\u7ED9\u540C\u5B66"
+    nextNodeId: 6
+    choices: []
+  - id: 6
+    content: "3.\u6000\u7591\u8001\u5E08\uFF0C\u4F46\u662F\u4E0D\u8981\u4E0E\u4ED6\u4E3A\u654C"
+    nextNodeId: 
+    choices: []
