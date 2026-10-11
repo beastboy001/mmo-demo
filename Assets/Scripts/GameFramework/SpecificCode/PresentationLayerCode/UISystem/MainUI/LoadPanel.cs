@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 public class LoadPanel : BasePanel
 {
     private const string LoginSceneName = "LoginScene";
-    private const string GameSceneName = "GameScene";
+    private const string GameSceneName = "Test";
 
     private Slider processViewSli;
     private Text progressText;

@@ -38,4 +38,8 @@ public interface INetSystem : ISystem
     void SendAddFriend(int targetCharacterId);
 
     void SendRespondFriend(int requestId, bool accept);
+
+    void SendChatHistory(int peerCharacterId, int limit = 50);
+
+    void SendChatMessage(int toCharacterId, string content);
 }

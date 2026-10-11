@@ -296,6 +296,46 @@ public class NetSystem : INetSystem
         });
     }
 
+    public void SendChatHistory(int peerCharacterId, int limit = 50)
+    {
+        if (!IsConnected || peerCharacterId <= 0)
+        {
+            this.SendEvent<ChatHistoryResultEvent>(new ChatHistoryResMsg
+            {
+                ok = false,
+                message = "未连接或好友无效",
+                peerCharacterId = peerCharacterId,
+                messages = new ChatMessageItemMsg[0]
+            });
+            return;
+        }
+
+        Send(MsgId.ChatHistoryReq, new ChatHistoryReqMsg
+        {
+            peerCharacterId = peerCharacterId,
+            limit = limit > 0 ? limit : 50
+        });
+    }
+
+    public void SendChatMessage(int toCharacterId, string content)
+    {
+        if (!IsConnected || toCharacterId <= 0)
+        {
+            this.SendEvent<ChatSendResultEvent>(new ChatSendResMsg
+            {
+                ok = false,
+                message = "未连接或目标无效"
+            });
+            return;
+        }
+
+        Send(MsgId.ChatSendReq, new ChatSendReqMsg
+        {
+            toCharacterId = toCharacterId,
+            content = content ?? string.Empty
+        });
+    }
+
     public void Update()
     {
         while (true)
@@ -488,6 +528,43 @@ public class NetSystem : INetSystem
                 RespondFriendResMsg res = JsonUtility.FromJson<RespondFriendResMsg>(json) ??
                                           new RespondFriendResMsg { ok = false, message = "解析回应好友失败" };
                 this.SendEvent<RespondFriendResultEvent>(res);
+                break;
+            }
+
+            case MsgId.ChatHistoryRes:
+            {
+                ChatHistoryResMsg res = JsonUtility.FromJson<ChatHistoryResMsg>(json) ??
+                                        new ChatHistoryResMsg
+                                        {
+                                            ok = false,
+                                            message = "解析聊天记录失败",
+                                            messages = new ChatMessageItemMsg[0]
+                                        };
+                if (res.messages == null)
+                {
+                    res.messages = new ChatMessageItemMsg[0];
+                }
+
+                this.SendEvent<ChatHistoryResultEvent>(res);
+                break;
+            }
+
+            case MsgId.ChatSendRes:
+            {
+                ChatSendResMsg res = JsonUtility.FromJson<ChatSendResMsg>(json) ??
+                                     new ChatSendResMsg { ok = false, message = "解析发消息失败" };
+                this.SendEvent<ChatSendResultEvent>(res);
+                break;
+            }
+
+            case MsgId.ChatPush:
+            {
+                ChatPushMsg push = JsonUtility.FromJson<ChatPushMsg>(json);
+                if (push != null && push.msg != null)
+                {
+                    this.SendEvent<ChatPushEvent>(push);
+                }
+
                 break;
             }
 

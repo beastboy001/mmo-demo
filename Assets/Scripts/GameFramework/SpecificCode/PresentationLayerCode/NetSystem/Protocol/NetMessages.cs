@@ -32,6 +32,12 @@ public static class MsgId
     public const short RespondFriendReq = 26;
     public const short RespondFriendRes = 27;
 
+    public const short ChatHistoryReq = 30;
+    public const short ChatHistoryRes = 31;
+    public const short ChatSendReq = 32;
+    public const short ChatSendRes = 33;
+    public const short ChatPush = 34;
+
     public const short Heartbeat = 100;
 }
 
@@ -260,6 +266,53 @@ public class RespondFriendResMsg
     public string message;
 }
 
+[Serializable]
+public class ChatMessageItemMsg
+{
+    public int id;
+    public int fromCharacterId;
+    public int toCharacterId;
+    public string content;
+    public string createdAt;
+}
+
+[Serializable]
+public class ChatHistoryReqMsg
+{
+    public int peerCharacterId;
+    public int limit;
+}
+
+[Serializable]
+public class ChatHistoryResMsg
+{
+    public bool ok;
+    public string message;
+    public int peerCharacterId;
+    public ChatMessageItemMsg[] messages;
+}
+
+[Serializable]
+public class ChatSendReqMsg
+{
+    public int toCharacterId;
+    public string content;
+}
+
+[Serializable]
+public class ChatSendResMsg
+{
+    public bool ok;
+    public string message;
+    public ChatMessageItemMsg msg;
+}
+
+[Serializable]
+public class ChatPushMsg
+{
+    public ChatMessageItemMsg msg;
+}
+
 public class LoginResultEvent { }
 public class RegisterResultEvent { }
 public class CharacterListResultEvent { }
@@ -273,6 +326,9 @@ public class FriendListResultEvent { }
 public class FriendRequestListResultEvent { }
 public class AddFriendResultEvent { }
 public class RespondFriendResultEvent { }
+public class ChatHistoryResultEvent { }
+public class ChatSendResultEvent { }
+public class ChatPushEvent { }
 
 /// <summary>服务器角色数据 → 客户端 PlayerData</summary>
 public static class CharacterDataConverter
