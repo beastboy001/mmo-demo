@@ -1,0 +1,18 @@
+{
+    "name": "Game.Hotfix",
+    "rootNamespace": "",
+    "references": [
+        "Game.AOT",
+        "P09.Modular.Humanoid",
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

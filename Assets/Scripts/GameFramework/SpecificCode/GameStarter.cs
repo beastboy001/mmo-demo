@@ -1,4 +1,7 @@
+using System;
 using System.Collections;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,17 +11,42 @@ using UnityEngine.SceneManagement;
 //*****************************************
 public class GameStarter : MonoBehaviour, IController
 {
-    //创建一个架构启动器的变量
-    private StartArchitecture startArchitecture;
-
     private void Awake()
     {
-        //获取唯一的架构启动器
-        startArchitecture = StartArchitecture.Instance;
-        startArchitecture.SetGameArchitecture(new GameArchitercture());//这里new出来时自动调用了构造函数，进行了初始化
-        startArchitecture.InitAllModulesInArchitecture();//这里是通过架构启动器内存入的架构来把注册到架构内的系统全部初始化
+        // 架构的创建现在交给热更层（Game.Hotfix 里的 GameBootstrap）。
+        // 这里用反射调用，是为了让 AOT 程序集在编译期完全不依赖热更程序集。
+        StartHotfix();
+
         DontDestroyOnLoad(gameObject);
-        Debug.Log("[GameStarter] 架构已启动");
+        Debug.Log("[GameStarter] AOT 启动完成");
+    }
+
+    private static void StartHotfix()
+    {
+        Assembly hotfix = AppDomain.CurrentDomain.GetAssemblies()
+            .FirstOrDefault(a => a.GetName().Name == "Game.Hotfix");
+
+        if (hotfix == null)
+        {
+            Debug.LogError("[GameStarter] 找不到热更程序集 Game.Hotfix");
+            return;
+        }
+
+        Type entry = hotfix.GetType("GameBootstrap");
+        if (entry == null)
+        {
+            Debug.LogError("[GameStarter] 热更程序集里找不到入口类型 GameBootstrap");
+            return;
+        }
+
+        MethodInfo start = entry.GetMethod("Start", BindingFlags.Public | BindingFlags.Static);
+        if (start == null)
+        {
+            Debug.LogError("[GameStarter] GameBootstrap 里找不到静态方法 Start");
+            return;
+        }
+
+        start.Invoke(null, null);
     }
 
     private void Update()
